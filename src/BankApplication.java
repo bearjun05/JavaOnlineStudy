@@ -4,6 +4,7 @@ import grade.CountPolicy;
 import grade.GradePolicy;
 import grade.TotalMoneyPolicy;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class BankApplication {
@@ -11,11 +12,13 @@ public class BankApplication {
     private static Scanner scanner = new Scanner(System.in);
     public static int cnt = -1;
 
-    public static GradePolicy gradePolicy;
+    public static GradePolicy gradePolicy = new CountPolicy();
 
 
 
-    public static void main(String[] args) {
+
+
+    public static void main(String[] args) throws InputMismatchException{
         boolean run = true;
         while (run) {
             System.out.println("---------------------------------------------------");
@@ -25,18 +28,32 @@ public class BankApplication {
 
             int selectNo = scanner.nextInt();
 
-            if (selectNo == 1) {
-                createAccount();
-            } else if (selectNo == 2) {
-                accountList();
-            } else if (selectNo == 3) {
-                deposit();
-            } else if (selectNo == 4) {
-                withdraw();
-            } else if (selectNo == 5) {
-                run = false;
-            } else if (selectNo == 6) {
-                config();
+            try {
+                if (selectNo == 1) {
+//                try{
+//                    createAccount();
+//                }catch (InputMismatchException e){
+//                    System.out.println("잘못된 값을 입력하셨습니다 다시 입력해주세요.");
+//                    scanner.next();
+//                }
+                    createAccount();
+                } else if (selectNo == 2) {
+                    accountList();
+                } else if (selectNo == 3) {
+                        deposit();
+                } else if (selectNo == 4) {
+                    withdraw();
+                } else if (selectNo == 5) {
+                    run = false;
+                } else if (selectNo == 6) {
+                    config();
+                }
+            } catch (InputMismatchException e){
+                System.out.println();
+                System.out.println("잘못된 값을 입력하셨습니다.");
+                scanner.next();
+            } catch (Exception e) {
+                System.out.println("알 수 없는 오류가 발생했습니다.");
             }
         }
         System.out.println("프로그램 종료");
@@ -61,7 +78,7 @@ public class BankApplication {
     }
 
     //계좌생성하기
-    private static void createAccount() {
+    private static void createAccount() throws Exception {
         // 작성 위치
         cnt++;
         System.out.print("계좌번호 : ");
@@ -69,6 +86,14 @@ public class BankApplication {
         System.out.print("계좌주 : ");
         String name = scanner.next();
         System.out.print("초기입금액 : ");
+//        int money =0;
+//        try {
+//            money = scanner.nextInt();
+//        }catch (InputMismatchException e){
+//            System.out.println("잘못된 값을 입력하셨습니다.");
+//            scanner.next();
+//            return;
+//        }
         int money = scanner.nextInt();
 
         account[cnt] = new Account(accountNumber, name, money);
@@ -77,7 +102,7 @@ public class BankApplication {
 
 
     //계좌목록보기
-    private static void accountList() {
+    private static void accountList() throws Exception{
         // 작성 위치
         for (int i = 0; i <= cnt; i++) {
             System.out.println("계좌번호: " + account[i].getAccountNumber()+"\n"
@@ -89,13 +114,13 @@ public class BankApplication {
     }
 
     //예금하기
-    private static void deposit() {
+    private static void deposit() throws Exception{
       // 작성 위치
         System.out.print("계좌번호 : ");
         String accountNumber = scanner.next();
         System.out.print("예금액 : ");
-        int money = scanner.nextInt();
-        for (int i = 0; i <= cnt; i++) {
+            int money = scanner.nextInt();
+            for (int i = 0; i <= cnt; i++) {
             if(account[i].getAccountNumber().equals(accountNumber)){
                 account[i].setMoney(account[i].getMoney()+money);
                 account[i].cnt++;
@@ -106,7 +131,7 @@ public class BankApplication {
     }
 
     //출금하기
-    private static void withdraw() {
+    private static void withdraw() throws Exception{
       // 작성 위치
         System.out.print("계좌번호 : ");
         String accountNumber = scanner.next();
@@ -125,7 +150,5 @@ public class BankApplication {
               //  System.out.println(" 정상적으로 반영 = " + account[i].getGrade());
             }
         }
-
-
     }
 }
